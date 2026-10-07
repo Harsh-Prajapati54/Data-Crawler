@@ -20,6 +20,15 @@ def append_jsonl(path: Path, record: dict) -> None:
         handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def append_jsonl_batch(path: Path, records: list[dict]) -> None:
+    if not records:
+        return
+    ensure_parent(path)
+    with path.open("a", encoding="utf-8") as handle:
+        for record in records:
+            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
 def file_size_bytes(path: Path) -> int:
     """Return file size in bytes; missing files count as zero."""
     try:

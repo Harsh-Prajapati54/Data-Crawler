@@ -271,7 +271,10 @@ class CrawlState:
                 utc_now(),
             ),
         )
+
+    def commit(self) -> None:
         self.conn.commit()
+
 
     def counts(self) -> dict[str, int]:
         rows = self.conn.execute(

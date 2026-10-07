@@ -176,3 +176,94 @@ class GitHubClient:
                 f"Unexpected blob encoding for {owner}/{repo}:{sha}"
             )
         return base64.b64decode(data.get("content", ""))
+
+    def get_commit_sha(self, owner: str, repo: str, branch: str) -> str:
+        data = self.request_json(
+            "GET",
+            f"/repos/{owner}/{repo}/commits/{branch}",
+        )
+        return data["sha"]
+
+    def download_archive(self, owner: str, repo: str, ref: str, format_name: str = "zip") -> str:
+        import tempfile
+        import os
+        
+        format_str = "zipball" if format_name == "zip" else "tarball"
+        path = f"/repos/{owner}/{repo}/{format_str}/{ref}"
+        last_error: Exception | None = None
+
+        for attempt in range(self.config.max_retries + 1):
+            try:
+                response = self.session.request(
+                    "GET",
+                    self._url(path),
+                    stream=True,
+                    timeout=self.config.timeout_seconds,
+                )
+
+                remaining = response.headers.get("X-RateLimit-Remaining")
+                if remaining is not None:
+                    self.logger.debug(
+                        "GitHub GET %s -> %s (rate remaining=%s)",
+                        path,
+                        response.status_code,
+                        remaining,
+                    )
+
+                if response.ok:
+                    fd, temp_path = tempfile.mkstemp(suffix=f".{format_name}")
+                    with os.fdopen(fd, 'wb') as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+                    return temp_path
+
+                retryable = (
+                    response.status_code in {403, 429}
+                    or 500 <= response.status_code < 600
+                )
+                if not retryable or attempt >= self.config.max_retries:
+                    detail = response.text[:500] if not response.ok else ""
+                    raise GitHubAPIError(
+                        f"GitHub API {response.status_code} for GET {path}: {detail}"
+                    )
+
+                retry_after = response.headers.get("Retry-After")
+                if retry_after:
+                    delay = float(retry_after)
+                elif (
+                    response.headers.get("X-RateLimit-Remaining") == "0"
+                    and response.headers.get("X-RateLimit-Reset")
+                ):
+                    reset_at = int(response.headers["X-RateLimit-Reset"])
+                    delay = max(1, reset_at - int(time.time()))
+                else:
+                    delay = self.config.retry_backoff_seconds * (2**attempt)
+
+                self.logger.warning(
+                    "GitHub request retry %d/%d after HTTP %s; sleeping %.1fs: %s",
+                    attempt + 1,
+                    self.config.max_retries,
+                    response.status_code,
+                    delay,
+                    path,
+                )
+                time.sleep(delay)
+
+            except (requests.RequestException, ValueError) as exc:
+                last_error = exc
+                if attempt >= self.config.max_retries:
+                    break
+                delay = self.config.retry_backoff_seconds * (2**attempt)
+                self.logger.warning(
+                    "Request retry %d/%d after %s; sleeping %.1fs: %s",
+                    attempt + 1,
+                    self.config.max_retries,
+                    type(exc).__name__,
+                    delay,
+                    path,
+                )
+                time.sleep(delay)
+
+        raise GitHubAPIError(
+            f"GitHub request failed for GET {path}: {last_error}"
+        )

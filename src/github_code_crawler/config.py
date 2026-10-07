@@ -21,6 +21,8 @@ class GitHubConfig:
     token_env: str
     api_base_url: str
     api_version: str
+    download_method: str
+    archive_format: str
     queries: tuple[SearchQueryConfig, ...]
     sort: str
     order: str
@@ -281,6 +283,8 @@ def load_config(path: str | Path) -> AppConfig:
             token_env=str(_require(gh, "token_env")),
             api_base_url=str(_require(gh, "api_base_url")).rstrip("/"),
             api_version=str(_require(gh, "api_version")),
+            download_method=str(gh.get("download_method", "archive")),
+            archive_format=str(gh.get("archive_format", "zip")),
             queries=_parse_queries(gh),
             sort=str(gh.get("sort", "stars")),
             order=str(gh.get("order", "desc")),
