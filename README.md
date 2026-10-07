@@ -1,3 +1,18 @@
+<div align="center">
+
+<img src="crawler.png" alt="GitHub Code Crawler" width="250"/>
+
+# 🦀 GitHub Code Crawler
+
+**A configuration-driven, resumable Python source crawler for building high-quality code datasets from GitHub.**
+
+</div>
+
+---
+
+A configuration-driven, resumable Python source crawler that discovers GitHub repositories, samples a diverse repository set, validates and cleans Python code, scans for secrets, deduplicates it, and produces JSONL suitable for code-LLM training.
+
+
 # GitHub Code Crawler
 
 A configuration-driven, resumable Python source crawler that discovers GitHub repositories, samples a diverse repository set, validates and cleans Python code, scans for secrets, deduplicates it, and produces JSONL suitable for code-LLM training.
