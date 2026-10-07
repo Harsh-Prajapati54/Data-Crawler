@@ -12,6 +12,9 @@
 
 A configuration-driven, resumable Python source crawler that discovers GitHub repositories, samples a diverse repository set, validates and cleans Python code, scans for secrets, deduplicates it, and produces JSONL suitable for code-LLM training.
 
+> [!WARNING]
+> **Use responsibly:** This tool crawls publicly available GitHub source code. Always respect GitHub's policies, repository licenses, API/rate limits, and applicable laws. Do not use it to collect private data, secrets, or bypass access controls.
+
 
 # GitHub Code Crawler
 
