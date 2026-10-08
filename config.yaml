@@ -8,9 +8,6 @@ github:
   token_env: GITHUB_TOKEN
   api_base_url: https://api.github.com
   api_version: "2026-03-10"
-  download_method: archive
-  archive_format: zip
-
 
   # Multiple queries create a broader candidate population.
   # Repositories returned by multiple queries are merged by full_name.
@@ -159,7 +156,7 @@ output:
   # append = preserve previous dataset and use persistent state to avoid
   # re-crawling previously completed repositories / code hashes.
   # overwrite = clear dataset and state, then build from scratch.
-  mode: overwrite
+  mode: append
   train_file: data/train.jsonl
   validation_file: data/validation.jsonl
   metadata_file: data/manifest.jsonl
