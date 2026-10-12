@@ -132,17 +132,29 @@ class GitHubClient:
         while len(repositories) < max_repositories and page <= page_limit:
             remaining = max_repositories - len(repositories)
             per_page = min(self.config.page_size, remaining, 100)
-            data = self.request_json(
-                "GET",
-                "/search/repositories",
-                params={
-                    "q": query,
-                    "sort": self.config.sort,
-                    "order": self.config.order,
-                    "per_page": per_page,
-                    "page": page,
-                },
-            )
+            
+            if (page - 1) * per_page >= 1000:
+                exhausted = True
+                break
+
+            try:
+                data = self.request_json(
+                    "GET",
+                    "/search/repositories",
+                    params={
+                        "q": query,
+                        "sort": self.config.sort,
+                        "order": self.config.order,
+                        "per_page": per_page,
+                        "page": page,
+                    },
+                )
+            except GitHubAPIError as e:
+                if "422" in str(e) and "1000 search results" in str(e):
+                    exhausted = True
+                    break
+                raise
+
             items = data.get("items", [])
             repositories.extend(items)
             if not items or len(items) < per_page:

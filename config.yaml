@@ -1,91 +1,450 @@
+
 # GitHub Python Code Crawler
 #
-# The crawler uses these settings to define the candidate population,
-# sample diverse repositories, process code, and build a JSONL dataset.
-# Normal runs do not require Python source changes.
+# Large-scale Python repository discovery configuration.
+# Designed to collect a broad and diverse Python code dataset.
 
 github:
   token_env: GITHUB_TOKEN
   api_base_url: https://api.github.com
   api_version: "2026-03-10"
 
-  # Multiple queries create a broader candidate population.
-  # Repositories returned by multiple queries are merged by full_name.
   queries:
-    - name: general
-      query: "language:python stars:>=100 archived:false fork:false"
-      weight: 0.45
 
-    - name: machine_learning
-      query: "language:python topic:machine-learning stars:>=100 archived:false fork:false"
-      weight: 0.15
+    # ============================================================
+    # GENERAL PYTHON - STAR RANGES
+    # ============================================================
 
-    - name: data_science
-      query: "language:python topic:data-science stars:>=100 archived:false fork:false"
+    - name: general_1_9
+      query: "language:python stars:1..9 archived:false fork:false"
+      weight: 0.05
+
+    - name: general_10_49
+      query: "language:python stars:10..49 archived:false fork:false"
+      weight: 0.08
+
+    - name: general_50_99
+      query: "language:python stars:50..99 archived:false fork:false"
+      weight: 0.08
+
+    - name: general_100_499
+      query: "language:python stars:100..499 archived:false fork:false"
       weight: 0.10
 
-    - name: web
-      query: "language:python topic:web stars:>=100 archived:false fork:false"
+    - name: general_500_1999
+      query: "language:python stars:500..1999 archived:false fork:false"
       weight: 0.10
 
-    - name: automation
-      query: "language:python topic:automation stars:>=100 archived:false fork:false"
-      weight: 0.10
+    - name: general_2000_9999
+      query: "language:python stars:2000..9999 archived:false fork:false"
+      weight: 0.08
 
-    - name: scientific
-      query: "language:python topic:scientific-computing stars:>=100 archived:false fork:false"
-      weight: 0.10
+    - name: general_10000_plus
+      query: "language:python stars:>=10000 archived:false fork:false"
+      weight: 0.05
 
-  # Candidate pool controls discovery. The sampler then chooses the smaller
-  # repositories_per_run set from this pool.
+    # ============================================================
+    # RECENT / ACTIVE PYTHON
+    # ============================================================
+
+    - name: active_1_49
+      query: "language:python stars:1..49 pushed:>=2025-01-01 archived:false fork:false"
+      weight: 0.05
+
+    - name: active_50_99
+      query: "language:python stars:50..99 pushed:>=2025-01-01 archived:false fork:false"
+      weight: 0.05
+
+    - name: active_100_499
+      query: "language:python stars:100..499 pushed:>=2025-01-01 archived:false fork:false"
+      weight: 0.06
+
+    - name: active_500_1999
+      query: "language:python stars:500..1999 pushed:>=2025-01-01 archived:false fork:false"
+      weight: 0.04
+
+    # ============================================================
+    # MACHINE LEARNING
+    # ============================================================
+
+    - name: ml_10_99
+      query: "language:python topic:machine-learning stars:10..99 archived:false fork:false"
+      weight: 0.04
+
+    - name: ml_100_499
+      query: "language:python topic:machine-learning stars:100..499 archived:false fork:false"
+      weight: 0.04
+
+    - name: ml_500_1999
+      query: "language:python topic:machine-learning stars:500..1999 archived:false fork:false"
+      weight: 0.04
+
+    - name: ml_2000_plus
+      query: "language:python topic:machine-learning stars:>=2000 archived:false fork:false"
+      weight: 0.03
+
+    # ============================================================
+    # DEEP LEARNING
+    # ============================================================
+
+    - name: deep_learning_10_99
+      query: "language:python topic:deep-learning stars:10..99 archived:false fork:false"
+      weight: 0.03
+
+    - name: deep_learning_100_499
+      query: "language:python topic:deep-learning stars:100..499 archived:false fork:false"
+      weight: 0.03
+
+    - name: deep_learning_500_1999
+      query: "language:python topic:deep-learning stars:500..1999 archived:false fork:false"
+      weight: 0.03
+
+    - name: deep_learning_2000_plus
+      query: "language:python topic:deep-learning stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # ARTIFICIAL INTELLIGENCE
+    # ============================================================
+
+    - name: ai_10_99
+      query: "language:python topic:artificial-intelligence stars:10..99 archived:false fork:false"
+      weight: 0.03
+
+    - name: ai_100_499
+      query: "language:python topic:artificial-intelligence stars:100..499 archived:false fork:false"
+      weight: 0.03
+
+    - name: ai_500_1999
+      query: "language:python topic:artificial-intelligence stars:500..1999 archived:false fork:false"
+      weight: 0.03
+
+    - name: ai_2000_plus
+      query: "language:python topic:artificial-intelligence stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # NLP
+    # ============================================================
+
+    - name: nlp_10_99
+      query: "language:python topic:nlp stars:10..99 archived:false fork:false"
+      weight: 0.03
+
+    - name: nlp_100_499
+      query: "language:python topic:nlp stars:100..499 archived:false fork:false"
+      weight: 0.03
+
+    - name: nlp_500_1999
+      query: "language:python topic:nlp stars:500..1999 archived:false fork:false"
+      weight: 0.03
+
+    - name: nlp_2000_plus
+      query: "language:python topic:nlp stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # COMPUTER VISION
+    # ============================================================
+
+    - name: cv_10_99
+      query: "language:python topic:computer-vision stars:10..99 archived:false fork:false"
+      weight: 0.03
+
+    - name: cv_100_499
+      query: "language:python topic:computer-vision stars:100..499 archived:false fork:false"
+      weight: 0.03
+
+    - name: cv_500_1999
+      query: "language:python topic:computer-vision stars:500..1999 archived:false fork:false"
+      weight: 0.03
+
+    - name: cv_2000_plus
+      query: "language:python topic:computer-vision stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # DATA SCIENCE
+    # ============================================================
+
+    - name: data_science_10_99
+      query: "language:python topic:data-science stars:10..99 archived:false fork:false"
+      weight: 0.03
+
+    - name: data_science_100_499
+      query: "language:python topic:data-science stars:100..499 archived:false fork:false"
+      weight: 0.03
+
+    - name: data_science_500_1999
+      query: "language:python topic:data-science stars:500..1999 archived:false fork:false"
+      weight: 0.03
+
+    - name: data_science_2000_plus
+      query: "language:python topic:data-science stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # DATA ENGINEERING
+    # ============================================================
+
+    - name: data_engineering_10_99
+      query: "language:python topic:data-engineering stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: data_engineering_100_499
+      query: "language:python topic:data-engineering stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: data_engineering_500_1999
+      query: "language:python topic:data-engineering stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: data_engineering_2000_plus
+      query: "language:python topic:data-engineering stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # WEB / BACKEND
+    # ============================================================
+
+    - name: django_10_99
+      query: "language:python topic:django stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: django_100_499
+      query: "language:python topic:django stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: django_500_1999
+      query: "language:python topic:django stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: django_2000_plus
+      query: "language:python topic:django stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: flask_10_99
+      query: "language:python topic:flask stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: flask_100_499
+      query: "language:python topic:flask stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: flask_500_1999
+      query: "language:python topic:flask stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: flask_2000_plus
+      query: "language:python topic:flask stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: fastapi_10_99
+      query: "language:python topic:fastapi stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: fastapi_100_499
+      query: "language:python topic:fastapi stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: fastapi_500_1999
+      query: "language:python topic:fastapi stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: fastapi_2000_plus
+      query: "language:python topic:fastapi stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: web_scraping_10_99
+      query: "language:python topic:web-scraping stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: web_scraping_100_499
+      query: "language:python topic:web-scraping stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: web_scraping_500_1999
+      query: "language:python topic:web-scraping stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: web_scraping_2000_plus
+      query: "language:python topic:web-scraping stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # AUTOMATION / DEVOPS
+    # ============================================================
+
+    - name: automation_10_99
+      query: "language:python topic:automation stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: automation_100_499
+      query: "language:python topic:automation stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: automation_500_1999
+      query: "language:python topic:automation stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: automation_2000_plus
+      query: "language:python topic:automation stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: devops_10_99
+      query: "language:python topic:devops stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: devops_100_499
+      query: "language:python topic:devops stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: devops_500_1999
+      query: "language:python topic:devops stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: devops_2000_plus
+      query: "language:python topic:devops stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # TESTING / CLI
+    # ============================================================
+
+    - name: testing_10_99
+      query: "language:python topic:testing stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: testing_100_499
+      query: "language:python topic:testing stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: testing_500_1999
+      query: "language:python topic:testing stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: testing_2000_plus
+      query: "language:python topic:testing stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: cli_10_99
+      query: "language:python topic:cli stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: cli_100_499
+      query: "language:python topic:cli stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: cli_500_1999
+      query: "language:python topic:cli stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: cli_2000_plus
+      query: "language:python topic:cli stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # SCIENCE / ROBOTICS
+    # ============================================================
+
+    - name: scientific_10_99
+      query: "language:python topic:scientific-computing stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: scientific_100_499
+      query: "language:python topic:scientific-computing stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: scientific_500_1999
+      query: "language:python topic:scientific-computing stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: scientific_2000_plus
+      query: "language:python topic:scientific-computing stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    - name: robotics_10_99
+      query: "language:python topic:robotics stars:10..99 archived:false fork:false"
+      weight: 0.02
+
+    - name: robotics_100_499
+      query: "language:python topic:robotics stars:100..499 archived:false fork:false"
+      weight: 0.02
+
+    - name: robotics_500_1999
+      query: "language:python topic:robotics stars:500..1999 archived:false fork:false"
+      weight: 0.02
+
+    - name: robotics_2000_plus
+      query: "language:python topic:robotics stars:>=2000 archived:false fork:false"
+      weight: 0.02
+
+    # ============================================================
+    # FINANCE / API / DATABASE
+    # ============================================================
+
+    - name: finance
+      query: "language:python topic:finance stars:>=10 archived:false fork:false"
+      weight: 0.02
+
+    - name: api
+      query: "language:python topic:api stars:>=10 archived:false fork:false"
+      weight: 0.02
+
+    - name: database
+      query: "language:python topic:database stars:>=10 archived:false fork:false"
+      weight: 0.02
+
+  # GitHub allows up to 100 results per page.
+  page_size: 100
+
+  # Do not go beyond GitHub's 1000-result search window.
+  max_pages_per_query: 10
+
   sort: stars
   order: desc
-  max_repositories: 300
-  page_size: 100
-  max_pages_per_query: 3
+
+  # Large discovery limit.
+  max_repositories: 50000
 
   timeout_seconds: 30
-  max_retries: 4
-  retry_backoff_seconds: 2
+  max_retries: 5
+  retry_backoff_seconds: 3
+
 
 repository_filter:
-  min_stars: 100
-  # ⭐ MAIN CONFIG: maximum repository size in BYTES.
-  # GitHub reports repository size in KB internally; the crawler converts
-  # the API value to bytes before comparing.
-  #
-  # Binary reference:
-  # 1 MB  = 1,048,576 bytes
-  # 100 MB = 104,857,600 bytes
-  # 500 MB = 524,288,000 bytes
-  # 1 GB  = 1,073,741,824 bytes
-  #
-  max_size_bytes: 524288000
+  # Include small repositories to increase dataset diversity.
+  min_stars: 1
+
+  # Maximum repository size = 1 GiB.
+  max_size_bytes: 1073741824
+
   require_license: true
+
   allowed_licenses:
     - MIT
     - Apache-2.0
     - BSD-2-Clause
     - BSD-3-Clause
+
   exclude_archived: true
   exclude_forks: true
+
 
 file_filter:
   extensions:
     - .py
-  # ⭐ MAIN CONFIG: maximum size of ONE Python file in BYTES.
-  #
-  # Binary reference:
-  # 1 MB  = 1,048,576 bytes
-  # 10 MB = 10,485,760 bytes
-  # 100 MB = 104,857,600 bytes
-  # 1 GB  = 1,073,741,824 bytes
-  #
-  max_file_size_bytes: 1048576
+
+  # Maximum individual file size = 1 GiB.
+  max_file_size_bytes: 1073741824
+
   min_code_characters: 80
   min_code_lines: 5
   min_tokens: 20
+
+  # Avoid extremely large individual samples.
   max_code_characters: 500000
+
   ignore_directories:
     - .git
     - .venv
@@ -104,84 +463,102 @@ file_filter:
     - generated
     - gen
 
+
 quality:
   syntax_check: true
+
   reject_generated_code: true
+
   generated_markers:
     - "generated by"
     - "automatically generated"
     - "do not edit"
     - "this file was generated"
+
   reject_binary: true
+
   max_repeated_line_ratio: 0.35
+
 
 security:
   enabled: true
   reject_on_detection: true
 
+
 deduplication:
   exact: true
   structural: true
 
+
 sampling:
-  # top      = highest-star repositories first
-  # random   = random from candidate pool
-  # stratified = random across query groups and star bands
   strategy: stratified
-  repositories_per_run: 100
-  candidate_pool_size: 1500
+
+  # Maximum repositories to process in one run.
+  repositories_per_run: 10000
+
+  # Keep a large candidate pool so the sampler has
+  # enough repositories to choose from.
+  candidate_pool_size: 30000
+
   seed: 42
+
+  # Skip repositories successfully crawled in previous runs.
   avoid_previously_crawled: true
 
-  # Weights are normalized automatically.
   star_buckets:
     - name: very_high
       min_stars: 10000
       max_stars: null
       weight: 0.10
+
     - name: high
       min_stars: 2000
       max_stars: 9999
       weight: 0.20
+
     - name: medium
       min_stars: 500
       max_stars: 1999
-      weight: 0.30
+      weight: 0.25
+
     - name: low
       min_stars: 100
       max_stars: 499
-      weight: 0.40
+      weight: 0.25
+
+    - name: very_low
+      min_stars: 1
+      max_stars: 99
+      weight: 0.20
+
 
 output:
-  # append = preserve previous dataset and use persistent state to avoid
-  # re-crawling previously completed repositories / code hashes.
-  # overwrite = clear dataset and state, then build from scratch.
+  # Keep adding to the existing dataset.
   mode: append
+
   train_file: data/train.jsonl
   validation_file: data/validation.jsonl
   metadata_file: data/manifest.jsonl
   state_file: run/state.sqlite3
 
-  # ⭐⭐⭐ MAIN STORAGE CONFIG: maximum combined size of
-  # train.jsonl + validation.jsonl in BYTES.
-  # The manifest file is NOT included in this limit.
-  # 0 = unlimited.
-  #
-  # Reference (binary units):
-  # 1 GB  = 1,073,741,824 bytes
-  # 5 GB  = 5,368,709,120 bytes
-  # 10 GB = 10,737,418,240 bytes
-  # 20 GB = 21,474,836,480 bytes
-  #
-  max_dataset_size_bytes: 10737418240
+  # Maximum combined train + validation size = 50 GiB.
+  max_dataset_size_bytes: 53687091200
 
   validation_ratio: 0.10
   split_seed: 42
+
   include_metadata_in_dataset: false
+
 
 runtime:
   work_dir: run
   log_level: INFO
+
+  # Continue even if one repository fails.
   continue_on_repository_error: true
-  max_files_per_repository: 0   # 0 = unlimited
-  max_output_records: 0         # 0 = unlimited
+
+  # 0 = unlimited.
+  max_files_per_repository: 0
+
+  # 0 = unlimited.
+  max_output_records: 0
