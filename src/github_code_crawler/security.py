@@ -38,3 +38,4 @@ def scan_for_secrets(code: str) -> list[dict]:
     finally:
         if temp_path:
             Path(temp_path).unlink(missing_ok=True)
+    

@@ -47,3 +47,4 @@ def jsonl_record_size_bytes(record: dict) -> int:
     line = json.dumps(record, ensure_ascii=False) + "\n"
     return len(line.encode("utf-8"))
     # Fake commits  
+    
